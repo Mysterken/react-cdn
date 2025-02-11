@@ -1,0 +1,14 @@
+---
+
+services:
+  front:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: node_dev
+      args:
+        - NODE_PORT=${NODE_PORT:-5173}
+    ports:
+      - "${NODE_PORT:-5173}:${NODE_PORT:-5173}"
+    volumes:
+      - ../:/usr/src/app

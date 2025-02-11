@@ -1,0 +1,14 @@
+---
+
+services:
+  front:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: node_prod
+      args:
+        - NODE_PORT=${NODE_PORT:-5173}
+    ports:
+      - "${NGINX_PORT:-3000}:${NGINX_PORT:-3000}"
+    environment:
+      - NGINX_PORT=${NGINX_PORT:-3000}
