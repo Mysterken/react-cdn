@@ -1,13 +1,143 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Gestion des fichiers</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 1rem;
+    }
+    section {
+      border: 1px solid #ddd;
+      padding: 1rem;
+      margin-bottom: 2rem;
+      border-radius: 5px;
+    }
+    h2 {
+      margin-top: 0;
+    }
+    label {
+      display: block;
+      margin-top: 0.5rem;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 0.5rem;
+      margin-top: 0.25rem;
+      box-sizing: border-box;
+    }
+    button {
+      margin-top: 1rem;
+      padding: 0.5rem 1rem;
+    }
+    .result {
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>Gestion des fichiers</h1>
+
+  <!-- Section Créer un fichier -->
+  <section id="createSection">
+    <h2>Créer un fichier</h2>
+    <form id="createForm" enctype="multipart/form-data">
+      <label for="file">Sélectionnez un fichier :</label>
+      <input type="file" id="file" name="file" required>
+      <br><br>
+      <button type="submit">Créer le fichier</button>
+    </form>
+    <div id="createResult" class="result"></div>
+  </section>
+
+  <!-- Section Modifier un fichier -->
+  <section id="modifySection">
+    <h2>Modifier un fichier</h2>
+    <form id="modifyForm">
+      <label for="modifyFilename">Nom du fichier à modifier :</label>
+      <input type="text" id="modifyFilename" name="modifyFilename" placeholder="exemple.txt" required>
+      <br><br>
+      <label for="newContent">Nouveau contenu :</label>
+      <textarea id="newContent" name="newContent" rows="6" placeholder="Tapez ici le nouveau contenu..." required></textarea>
+      <br><br>
+      <button type="submit">Modifier le fichier</button>
+    </form>
+    <div id="modifyResult" class="result"></div>
+  </section>
+
+  <!-- Section Supprimer un fichier -->
+  <section id="deleteSection">
+    <h2>Supprimer un fichier</h2>
+    <form id="deleteForm">
+      <label for="deleteFilename">Nom du fichier à supprimer :</label>
+      <input type="text" id="deleteFilename" name="deleteFilename" placeholder="exemple.txt" required>
+      <br><br>
+      <button type="submit">Supprimer le fichier</button>
+    </form>
+    <div id="deleteResult" class="result"></div>
+  </section>
+
+  <script>
+    // Handler pour créer un fichier via POST
+    document.getElementById('createForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const formData = new FormData();
+      const fileInput = document.getElementById('file');
+      if (!fileInput.files[0]) return;
+      formData.append('file', fileInput.files[0]);
+
+      try {
+        const response = await fetch('http://localhost:8080/files', {
+          method: 'POST',
+          body: formData
+        });
+        const text = await response.text();
+        document.getElementById('createResult').innerText = text;
+      } catch (error) {
+        document.getElementById('createResult').innerText = 'Erreur : ' + error.message;
+      }
+    });
+
+    // Handler pour modifier un fichier via PUT
+    document.getElementById('modifyForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const filename = document.getElementById('modifyFilename').value.trim();
+      const newContent = document.getElementById('newContent').value;
+      if (!filename || !newContent) return;
+      try {
+        const response = await fetch(`http://localhost:8080/files?filename=${encodeURIComponent(filename)}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'text/plain'
+          },
+          body: newContent
+        });
+        const text = await response.text();
+        document.getElementById('modifyResult').innerText = text;
+      } catch (error) {
+        document.getElementById('modifyResult').innerText = 'Erreur : ' + error.message;
+      }
+    });
+
+    // Handler pour supprimer un fichier via DELETE
+    document.getElementById('deleteForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const filename = document.getElementById('deleteFilename').value.trim();
+      if (!filename) return;
+      try {
+        const response = await fetch(`http://localhost:8080/files?filename=${encodeURIComponent(filename)}`, {
+          method: 'DELETE'
+        });
+        const text = await response.text();
+        document.getElementById('deleteResult').innerText = text;
+      } catch (error) {
+        document.getElementById('deleteResult').innerText = 'Erreur : ' + error.message;
+      }
+    });
+  </script>
+</body>
 </html>
