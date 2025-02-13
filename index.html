@@ -81,6 +81,13 @@
     <div id="deleteResult" class="result"></div>
   </section>
 
+  <!-- Section pour afficher la liste des fichiers -->
+  <section id="listSection">
+    <h2>Liste des fichiers</h2>
+    <button id="refreshList">Rafraîchir la liste</button>
+    <div id="listResult" class="result"></div>
+  </section>
+
   <script>
     // Handler pour créer un fichier via POST
     document.getElementById('createForm').addEventListener('submit', async function(e) {
@@ -136,6 +143,21 @@
         document.getElementById('deleteResult').innerText = text;
       } catch (error) {
         document.getElementById('deleteResult').innerText = 'Erreur : ' + error.message;
+      }
+    });
+
+    // Handler pour rafraîchir et afficher la liste des fichiers via GET
+    document.getElementById('refreshList').addEventListener('click', async function() {
+      try {
+        const response = await fetch('http://localhost:8080/files', {
+          method: 'GET'
+        });
+        const text = await response.text();
+        // Optionnel : formater la liste (chaque nom sur une nouvelle ligne)
+        const files = text.split('\n').filter(line => line.trim() !== '');
+        document.getElementById('listResult').innerHTML = files.join('<br>');
+      } catch (error) {
+        document.getElementById('listResult').innerText = 'Erreur : ' + error.message;
       }
     });
   </script>
