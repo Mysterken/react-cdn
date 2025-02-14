@@ -143,6 +143,17 @@
     <button id="refreshList">Rafraîchir la liste</button>
     <div id="listResult" class="result"></div>
   </section>
+  <!-- Section Télécharger un fichier -->
+<section id="downloadSection">
+  <h2>Télécharger un fichier</h2>
+  <form id="downloadForm">
+    <label for="downloadFilename">Nom du fichier à télécharger :</label>
+    <input type="text" id="downloadFilename" name="downloadFilename" placeholder="exemple.txt" required>
+    <br><br>
+    <button type="submit">Télécharger le fichier</button>
+  </form>
+</section>
+
 
   <script>
     // Handler pour créer un fichier via POST
@@ -216,6 +227,37 @@
         document.getElementById('listResult').innerText = 'Erreur : ' + error.message;
       }
     });
+    // Handler pour télécharger un fichier
+document.getElementById('downloadForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const filename = document.getElementById('downloadFilename').value.trim();
+  if (!filename) return;
+
+  try {
+    // 1) Requête GET vers /download/<filename>
+    const response = await fetch(`http://localhost:8080/api/download/${encodeURIComponent(filename)}`);
+    if (!response.ok) {
+      throw new Error('Erreur lors du téléchargement : ' + response.status);
+    }
+
+    // 2) Récupérer la réponse sous forme de blob
+    const blob = await response.blob();
+
+    // 3) Créer un lien de téléchargement temporaire
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename; // Nom du fichier qui sera téléchargé
+    document.body.appendChild(link);
+    link.click();
+
+    // 4) Nettoyer
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  } catch (error) {
+    alert("Erreur : " + error.message);
+  }
+});
   </script>
 </body>
 </html>
