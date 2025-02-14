@@ -1,285 +1,93 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
-  <meta charset="UTF-8">
-  <title>Gestion des fichiers</title>
-  <style>
-    /* Fond général avec dégradé */
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 1rem;
-      background: linear-gradient(135deg, #f0f9ff, #cbebff);
-      animation: fadeIn 1.5s ease-in-out;
-    }
+    <meta charset="UTF-8">
+    <title>Connexion</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+            flex-direction: column;
+        }
+        
+        .login-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        .input-field {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            color: white;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .login-btn {
+            background-color: #007bff;
+        }
+        
+        .login-btn:hover {
+            background-color: #0056b3;
+        }
+        
+        .error-message {
+            color: red;
+            display: none;
+            margin-top: 10px;
+        }
+    </style>
+    <script>
+        function login() {
+            let username = document.getElementById('login-username').value;
+            let password = document.getElementById('login-password').value;
+            let errorMessage = document.getElementById('login-error-message');
 
-    /* Animation de fade in */
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+            // Récupère la liste des utilisateurs depuis le localStorage
+            let users = JSON.parse(localStorage.getItem('users')) || [];
 
-    /* Style pour les sections */
-    section {
-      background: #ffffff;
-      border: 1px solid #ddd;
-      padding: 1rem;
-      margin-bottom: 2rem;
-      border-radius: 5px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    section:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    }
+            // Vérifie si l'utilisateur existe et si le mot de passe est correct
+            let user = users.find(u => u.username === username && u.password === password);
 
-    /* Titres */
-    h1, h2 {
-      color: #333;
-    }
-    h1 {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
-    h2 {
-      margin-top: 0;
-      color: #0056b3;
-      border-bottom: 2px solid #0056b3;
-      padding-bottom: 0.5rem;
-    }
-
-    /* Labels et champs */
-    label {
-      display: block;
-      margin-top: 0.5rem;
-      color: #555;
-    }
-    input, textarea {
-      width: 100%;
-      padding: 0.5rem;
-      margin-top: 0.25rem;
-      border: 1px solid #ccc;
-      border-radius: 3px;
-      box-sizing: border-box;
-      transition: border-color 0.3s ease;
-    }
-    input:focus, textarea:focus {
-      border-color: #0056b3;
-      outline: none;
-    }
-
-    /* Boutons */
-    button {
-      margin-top: 1rem;
-      padding: 0.5rem 1.5rem;
-      border: none;
-      border-radius: 3px;
-      background-color: #0056b3;
-      color: #fff;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: background-color 0.3s ease, transform 0.3s ease;
-    }
-    button:hover {
-      background-color: #003d80;
-      transform: scale(1.02);
-    }
-
-    /* Résultats */
-    .result {
-      margin-top: 1rem;
-      font-weight: bold;
-      color: #0056b3;
-    }
-  </style>
+            if (user) {
+                alert('Connexion réussie !');
+                window.location.href = 'form.html';
+            } else {
+                errorMessage.style.display = 'block';
+                errorMessage.innerText = 'Nom d\'utilisateur ou mot de passe incorrect';
+            }
+        }
+    </script>
 </head>
+
 <body>
-  <h1>Gestion des fichiers</h1>
+    <div class="login-container">
+        <h2>Connexion</h2>
+        <input type="text" id="login-username" class="input-field" placeholder="Nom d'utilisateur">
+        <input type="password" id="login-password" class="input-field" placeholder="Mot de passe">
+        <button class="btn login-btn" onclick="login()">Se connecter</button>
+        <p id="login-error-message" class="error-message"></p>
+        <p><a href="register.html">Créer un compte</a></p>
+    </div>
 
-  <!-- Section Créer un fichier -->
-  <section id="createSection">
-    <h2>Créer un fichier</h2>
-    <form id="createForm" enctype="multipart/form-data">
-      <label for="file">Sélectionnez un fichier :</label>
-      <input type="file" id="file" name="file" required>
-      <br><br>
-      <!-- Champ pour renommer le fichier importé -->
-      <label for="renameField">Renommer (optionnel) :</label>
-      <input type="text" id="renameField" name="newFilename" placeholder="nouveau_nom.txt">
-      <br><br>
-      <button type="submit">Créer le fichier</button>
-    </form>
-    <div id="createResult" class="result"></div>
-  </section>
-
-  <!-- Section Modifier un fichier -->
-  <section id="modifySection">
-    <h2>Modifier un fichier</h2>
-    <form id="modifyForm">
-      <label for="modifyFilename">Nom du fichier à modifier :</label>
-      <input type="text" id="modifyFilename" name="modifyFilename" placeholder="exemple.txt" required>
-      <br><br>
-      <label for="newContent">Nouveau contenu :</label>
-      <textarea id="newContent" name="newContent" rows="6" placeholder="Tapez ici le nouveau contenu..." required></textarea>
-      <br><br>
-      <button type="submit">Modifier le fichier</button>
-    </form>
-    <div id="modifyResult" class="result"></div>
-  </section>
-
-  <!-- Section Supprimer un fichier -->
-  <section id="deleteSection">
-    <h2>Supprimer un fichier</h2>
-    <form id="deleteForm">
-      <label for="deleteFilename">Nom du fichier à supprimer :</label>
-      <input type="text" id="deleteFilename" name="deleteFilename" placeholder="exemple.txt" required>
-      <br><br>
-      <button type="submit">Supprimer le fichier</button>
-    </form>
-    <div id="deleteResult" class="result"></div>
-  </section>
-
-  <!-- Section pour afficher la liste des fichiers -->
-  <section id="listSection">
-    <h2>Liste des fichiers</h2>
-    <button id="refreshList">Rafraîchir la liste</button>
-    <div id="listResult" class="result"></div>
-  </section>
-
-  <!-- Section Télécharger un fichier -->
-  <section id="downloadSection">
-    <h2>Télécharger un fichier</h2>
-    <form id="downloadForm">
-      <label for="downloadFilename">Nom du fichier à télécharger :</label>
-      <input type="text" id="downloadFilename" name="downloadFilename" placeholder="exemple.txt" required>
-      <br><br>
-      <button type="submit">Télécharger le fichier</button>
-    </form>
-  </section>
-
-  <script>
-    // Définir l'URL de base du backend
-    const backendUrl = 'http://localhost:8080/';
-
-  // Handler pour créer un fichier via POST avec renommage côté front et conservation de l'extension
-  document.getElementById('createForm').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    const formData = new FormData();
-    const fileInput = document.getElementById('file');
-    if (!fileInput.files[0]) return;
-
-    let fileToSend = fileInput.files[0];
-    // Récupérer le nouveau nom saisi par l'utilisateur
-    let newFileName = document.getElementById('renameField').value.trim();
-
-    if(newFileName) {
-      // Vérifier si le nouveau nom contient déjà un point (indiquant une extension)
-      if(newFileName.indexOf('.') === -1) {
-        // Si non, extraire l'extension du fichier original
-        const originalFileName = fileToSend.name;
-        const dotIndex = originalFileName.lastIndexOf('.');
-        if(dotIndex !== -1) {
-          const extension = originalFileName.slice(dotIndex); // comprend le point, ex. ".jpg"
-          newFileName += extension;
-        }
-      }
-      // Créer une nouvelle instance de File avec le nouveau nom et l'extension conservée
-      fileToSend = new File([fileToSend], newFileName, { 
-        type: fileToSend.type, 
-        lastModified: fileToSend.lastModified 
-      });
-    }
-    formData.append('file', fileToSend);
-
-    try {
-      const response = await fetch(backendUrl + 'api/files', {
-        method: 'POST',
-        body: formData
-      });
-      const text = await response.text();
-      document.getElementById('createResult').innerText = text;
-    } catch (error) {
-      document.getElementById('createResult').innerText = 'Erreur : ' + error.message;
-    }
-  });
-
-    // Handler pour modifier un fichier via PUT
-    document.getElementById('modifyForm').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      const filename = document.getElementById('modifyFilename').value.trim();
-      const newContent = document.getElementById('newContent').value;
-      if (!filename || !newContent) return;
-      try {
-        const response = await fetch(backendUrl + `api/files?filename=${encodeURIComponent(filename)}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'text/plain'
-          },
-          body: newContent
-        });
-        const text = await response.text();
-        document.getElementById('modifyResult').innerText = text;
-      } catch (error) {
-        document.getElementById('modifyResult').innerText = 'Erreur : ' + error.message;
-      }
-    });
-
-    // Handler pour supprimer un fichier via DELETE
-    document.getElementById('deleteForm').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      const filename = document.getElementById('deleteFilename').value.trim();
-      if (!filename) return;
-      try {
-        const response = await fetch(backendUrl + `api/files?filename=${encodeURIComponent(filename)}`, {
-          method: 'DELETE'
-        });
-        const text = await response.text();
-        document.getElementById('deleteResult').innerText = text;
-      } catch (error) {
-        document.getElementById('deleteResult').innerText = 'Erreur : ' + error.message;
-      }
-    });
-
-    // Handler pour rafraîchir et afficher la liste des fichiers via GET
-    document.getElementById('refreshList').addEventListener('click', async function() {
-      try {
-        const response = await fetch(backendUrl + 'api/files', {
-          method: 'GET'
-        });
-        const text = await response.text();
-        // Séparer les noms de fichiers et les afficher sur des lignes différentes
-        const files = text.split('\n').filter(line => line.trim() !== '');
-        document.getElementById('listResult').innerHTML = files.join('<br>');
-      } catch (error) {
-        document.getElementById('listResult').innerText = 'Erreur : ' + error.message;
-      }
-    });
-
-    // Handler pour télécharger un fichier
-    document.getElementById('downloadForm').addEventListener('submit', async function(e) {
-      e.preventDefault();
-      const filename = document.getElementById('downloadFilename').value.trim();
-      if (!filename) return;
-      try {
-        const response = await fetch(backendUrl + `api/download/${encodeURIComponent(filename)}`);
-        if (!response.ok) {
-          throw new Error('Erreur lors du téléchargement : ' + response.status);
-        }
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = filename;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
-      } catch (error) {
-        alert("Erreur : " + error.message);
-      }
-    });
-  </script>
 </body>
+
 </html>
