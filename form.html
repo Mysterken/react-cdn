@@ -1,288 +1,351 @@
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
-    <meta charset="UTF-8">
-    <title>Gestion des fichiers</title>
-    <style>
-        /* Fond général avec dégradé */
-        
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 1rem;
-            background: linear-gradient(135deg, #f0f9ff, #cbebff);
-            animation: fadeIn 1.5s ease-in-out;
-        }
-        /* Animation de fade in */
-        
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        /* Style pour les sections */
-        
-        section {
-            background: #ffffff;
-            border: 1px solid #ddd;
-            padding: 1rem;
-            margin-bottom: 2rem;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        
-        section:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-        }
-        /* Titres */
-        
-        h1,
-        h2 {
-            color: #333;
-        }
-        
-        h1 {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-        
-        h2 {
-            margin-top: 0;
-            color: #0056b3;
-            border-bottom: 2px solid #0056b3;
-            padding-bottom: 0.5rem;
-        }
-        /* Labels et champs */
-        
-        label {
-            display: block;
-            margin-top: 0.5rem;
-            color: #555;
-        }
-        
-        input,
-        textarea {
-            width: 100%;
-            padding: 0.5rem;
-            margin-top: 0.25rem;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-            box-sizing: border-box;
-            transition: border-color 0.3s ease;
-        }
-        
-        input:focus,
-        textarea:focus {
-            border-color: #0056b3;
-            outline: none;
-        }
-        /* Boutons */
-        
-        button {
-            margin-top: 1rem;
-            padding: 0.5rem 1.5rem;
-            border: none;
-            border-radius: 3px;
-            background-color: #0056b3;
-            color: #fff;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-        }
-        
-        button:hover {
-            background-color: #003d80;
-            transform: scale(1.02);
-        }
-        /* Résultats */
-        
-        .result {
-            margin-top: 1rem;
-            font-weight: bold;
-            color: #0056b3;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Gestion des fichiers</title>
+  <style>
+    /* Fond général avec dégradé */
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 1rem;
+      background: linear-gradient(135deg, #f0f9ff, #cbebff);
+      animation: fadeIn 1.5s ease-in-out;
+    }
+
+    /* Animation de fade in */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Style pour les sections */
+    section {
+      background: #ffffff;
+      border: 1px solid #ddd;
+      padding: 1rem;
+      margin-bottom: 2rem;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    section:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    /* Titres */
+    h1, h2 {
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    h2 {
+      margin-top: 0;
+      color: #0056b3;
+      border-bottom: 2px solid #0056b3;
+      padding-bottom: 0.5rem;
+    }
+
+    /* Labels et champs */
+    label {
+      display: block;
+      margin-top: 0.5rem;
+      color: #555;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 0.5rem;
+      margin-top: 0.25rem;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      box-sizing: border-box;
+      transition: border-color 0.3s ease;
+    }
+    input:focus, textarea:focus {
+      border-color: #0056b3;
+      outline: none;
+    }
+
+    /* Boutons */
+    button {
+      margin-top: 1rem;
+      padding: 0.5rem 1.5rem;
+      border: none;
+      border-radius: 3px;
+      background-color: #0056b3;
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+    button:hover {
+      background-color: #003d80;
+      transform: scale(1.02);
+    }
+
+    /* Résultats */
+    .result {
+      margin-top: 1rem;
+      font-weight: bold;
+      color: #0056b3;
+    }
+    
+    /* Styles pour l'arborescence */
+    ul.file-tree {
+      list-style-type: none;
+      padding-left: 1em;
+      margin: 0;
+    }
+    ul.file-tree li {
+      margin: 0.2em 0;
+    }
+    ul.file-tree li.directory {
+      font-weight: bold;
+      cursor: pointer;
+    }
+  </style>
 </head>
-<header>
-    <div>
-        <button type="button" onclick="window.location.href='index.html'">Log out</button>
-    </div>
-</header>
-
 <body>
-    <h1>Gestion des fichiers</h1>
+  <h1>Gestion des fichiers</h1>
+<!-- Section Créer un fichier -->
+<section id="createSection">
+    <h2>Créer un fichier</h2>
+    <form id="createForm" enctype="multipart/form-data">
+      <label for="file">Sélectionnez un fichier :</label>
+      <input type="file" id="file" name="file" required>
+      <br><br>
+      <!-- Champ pour renommer avec dossier -->
+      <label for="renameField">Renommer (optionnel - ex. dossier/sous-dossier/fichier.png) :</label>
+      <input type="text" id="renameField" name="newFilename" placeholder="dossier/fichier.png">
+      <br><br>
+      <button type="submit">Créer le fichier</button>
+    </form>
+    <div id="createResult" class="result"></div>
+  </section>
 
-    <!-- Section Créer un fichier -->
-    <section id="createSection">
-        <h2>Créer un fichier</h2>
-        <form id="createForm" enctype="multipart/form-data">
-            <label for="file">Sélectionnez un fichier :</label>
-            <input type="file" id="file" name="file" required>
-            <br><br>
-            <button type="submit">Créer le fichier</button>
-        </form>
-        <div id="createResult" class="result"></div>
-    </section>
+  <!-- Section Modifier un fichier -->
+  <section id="modifySection">
+    <h2>Modifier un fichier</h2>
+    <form id="modifyForm">
+      <label for="modifyFilename">Nom du fichier à modifier :</label>
+      <input type="text" id="modifyFilename" name="modifyFilename" placeholder="exemple.txt" required>
+      <br><br>
+      <label for="newContent">Nouveau contenu :</label>
+      <textarea id="newContent" name="newContent" rows="6" placeholder="Tapez ici le nouveau contenu..." required></textarea>
+      <br><br>
+      <button type="submit">Modifier le fichier</button>
+    </form>
+    <div id="modifyResult" class="result"></div>
+  </section>
 
-    <!-- Section Modifier un fichier -->
-    <section id="modifySection">
-        <h2>Modifier un fichier</h2>
-        <form id="modifyForm">
-            <label for="modifyFilename">Nom du fichier à modifier :</label>
-            <input type="text" id="modifyFilename" name="modifyFilename" placeholder="exemple.txt" required>
-            <br><br>
-            <label for="newContent">Nouveau contenu :</label>
-            <textarea id="newContent" name="newContent" rows="6" placeholder="Tapez ici le nouveau contenu..." required></textarea>
-            <br><br>
-            <button type="submit">Modifier le fichier</button>
-        </form>
-        <div id="modifyResult" class="result"></div>
-    </section>
+  <!-- Section Supprimer un fichier -->
+  <section id="deleteSection">
+    <h2>Supprimer un fichier</h2>
+    <form id="deleteForm">
+      <label for="deleteFilename">Nom du fichier à supprimer :</label>
+      <input type="text" id="deleteFilename" name="deleteFilename" placeholder="exemple.txt" required>
+      <br><br>
+      <button type="submit">Supprimer le fichier</button>
+    </form>
+    <div id="deleteResult" class="result"></div>
+  </section>
 
-    <!-- Section Supprimer un fichier -->
-    <section id="deleteSection">
-        <h2>Supprimer un fichier</h2>
-        <form id="deleteForm">
-            <label for="deleteFilename">Nom du fichier à supprimer :</label>
-            <input type="text" id="deleteFilename" name="deleteFilename" placeholder="exemple.txt" required>
-            <br><br>
-            <button type="submit">Supprimer le fichier</button>
-        </form>
-        <div id="deleteResult" class="result"></div>
-    </section>
+  <!-- Section pour afficher la liste des fichiers en arborescence -->
+  <section id="listSection">
+    <h2>Gestionnaire de fichiers</h2>
+    <button id="refreshList">Rafraîchir la liste</button>
+    <div id="listResult" class="result"></div>
+  </section>
 
-    <!-- Section pour afficher la liste des fichiers -->
-    <section id="listSection">
-        <h2>Liste des fichiers</h2>
-        <button id="refreshList">Rafraîchir la liste</button>
-        <div id="listResult" class="result"></div>
-    </section>
-    <!-- Section Télécharger un fichier -->
-    <section id="downloadSection">
-        <h2>Télécharger un fichier</h2>
-        <form id="downloadForm">
-            <label for="downloadFilename">Nom du fichier à télécharger :</label>
-            <input type="text" id="downloadFilename" name="downloadFilename" placeholder="exemple.txt" required>
-            <br><br>
-            <button type="submit">Télécharger le fichier</button>
-        </form>
-    </section>
+  <!-- Section Télécharger un fichier -->
+  <section id="downloadSection">
+    <h2>Télécharger un fichier</h2>
+    <form id="downloadForm">
+      <label for="downloadFilename">Nom du fichier à télécharger :</label>
+      <input type="text" id="downloadFilename" name="downloadFilename" placeholder="exemple.txt" required>
+      <br><br>
+      <button type="submit">Télécharger le fichier</button>
+    </form>
+  </section>
 
+  <script>
+    // Définir l'URL de base du backend
+    const backendUrl = 'http://localhost:8080/';
 
-    <script>
-        const backendUrl = 'http://localhost:8080/';
-        // Handler pour créer un fichier via POST
-        document.getElementById('createForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const formData = new FormData();
-            const fileInput = document.getElementById('file');
-            if (!fileInput.files[0]) return;
-            formData.append('file', fileInput.files[0]);
+    // Handler pour créer un fichier via POST avec renommage et gestion de dossiers côté front
+    document.getElementById('createForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const formData = new FormData();
+      const fileInput = document.getElementById('file');
+      if (!fileInput.files[0]) return;
 
-            try {
-                const response = await fetch(backendUrl + 'api/files', {
-                    method: 'POST',
-                    body: formData
-                });
-                const text = await response.text();
-                document.getElementById('createResult').innerText = text;
-            } catch (error) {
-                document.getElementById('createResult').innerText = 'Erreur : ' + error.message;
+      let fileToSend = fileInput.files[0];
+      let newFileName = document.getElementById('renameField').value.trim();
+
+      if(newFileName) {
+        if(newFileName.includes('/')) {
+          // Si le nom contient un ou plusieurs '/', on considère que c'est un chemin
+          let parts = newFileName.split('/');
+          // La dernière partie est le nom final du fichier
+          let finalName = parts.pop();
+          // La partie dossier (peut contenir plusieurs niveaux)
+          let folderPath = parts.join('/'); 
+          // Vérifier si le nom final contient une extension
+          if(finalName.indexOf('.') === -1) {
+            const originalFileName = fileToSend.name;
+            const dotIndex = originalFileName.lastIndexOf('.');
+            if(dotIndex !== -1) {
+              finalName += originalFileName.slice(dotIndex); // ajoute l'extension du fichier original
             }
-        });
-
-        // Handler pour modifier un fichier via PUT
-        document.getElementById('modifyForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const filename = document.getElementById('modifyFilename').value.trim();
-            const newContent = document.getElementById('newContent').value;
-            if (!filename || !newContent) return;
-            try {
-                const response = await fetch(backendUrl + `api/files?filename=${encodeURIComponent(filename)}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'text/plain'
-                    },
-                    body: newContent
-                });
-                const text = await response.text();
-                document.getElementById('modifyResult').innerText = text;
-            } catch (error) {
-                document.getElementById('modifyResult').innerText = 'Erreur : ' + error.message;
+          }
+          // On ajoute le dossier dans le FormData pour que le backend puisse créer la hiérarchie
+          formData.append('folderPath', folderPath);
+          newFileName = finalName; // Le nouveau nom sera uniquement le nom du fichier
+          fileToSend = new File([fileToSend], finalName, { 
+            type: fileToSend.type, 
+            lastModified: fileToSend.lastModified 
+          });
+        } else {
+          // Pas de dossier spécifié, vérifier et ajouter l'extension si nécessaire
+          if(newFileName.indexOf('.') === -1) {
+            const originalFileName = fileToSend.name;
+            const dotIndex = originalFileName.lastIndexOf('.');
+            if(dotIndex !== -1) {
+              newFileName += originalFileName.slice(dotIndex);
             }
+          }
+          fileToSend = new File([fileToSend], newFileName, { 
+            type: fileToSend.type, 
+            lastModified: fileToSend.lastModified 
+          });
+        }
+      }
+      formData.append('file', fileToSend);
+      // Optionnellement, envoyer aussi le nouveau nom complet (pour log ou validation côté backend)
+      formData.append('newFilename', newFileName);
+
+      try {
+        const response = await fetch(backendUrl + 'api/files', {
+          method: 'POST',
+          body: formData
         });
+        const text = await response.text();
+        document.getElementById('createResult').innerText = text;
+      } catch (error) {
+        document.getElementById('createResult').innerText = 'Erreur : ' + error.message;
+      }
+    });
 
-        // Handler pour supprimer un fichier via DELETE
-        document.getElementById('deleteForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const filename = document.getElementById('deleteFilename').value.trim();
-            if (!filename) return;
-            try {
-                const response = await fetch(backendUrl + `api/files?filename=${encodeURIComponent(filename)}`, {
-                    method: 'DELETE'
-                });
-                const text = await response.text();
-                document.getElementById('deleteResult').innerText = text;
-            } catch (error) {
-                document.getElementById('deleteResult').innerText = 'Erreur : ' + error.message;
-            }
+    // Handler pour modifier un fichier via PUT
+    document.getElementById('modifyForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const filename = document.getElementById('modifyFilename').value.trim();
+      const newContent = document.getElementById('newContent').value;
+      if (!filename || !newContent) return;
+      try {
+        const response = await fetch(backendUrl + `api/files?filename=${encodeURIComponent(filename)}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'text/plain'
+          },
+          body: newContent
         });
+        const text = await response.text();
+        document.getElementById('modifyResult').innerText = text;
+      } catch (error) {
+        document.getElementById('modifyResult').innerText = 'Erreur : ' + error.message;
+      }
+    });
 
-        // Handler pour rafraîchir et afficher la liste des fichiers via GET
-        document.getElementById('refreshList').addEventListener('click', async function() {
-            try {
-                const response = await fetch(backendUrl + 'api/files', {
-                    method: 'GET'
-                });
-                const text = await response.text();
-                // Séparer les noms de fichiers et les afficher sur des lignes différentes
-                const files = text.split('\n').filter(line => line.trim() !== '');
-                document.getElementById('listResult').innerHTML = files.join('<br>');
-            } catch (error) {
-                document.getElementById('listResult').innerText = 'Erreur : ' + error.message;
-            }
+    // Handler pour supprimer un fichier via DELETE
+    document.getElementById('deleteForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const filename = document.getElementById('deleteFilename').value.trim();
+      if (!filename) return;
+      try {
+        const response = await fetch(backendUrl + `api/files?filename=${encodeURIComponent(filename)}`, {
+          method: 'DELETE'
         });
-        // Handler pour télécharger un fichier
-        document.getElementById('downloadForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const filename = document.getElementById('downloadFilename').value.trim();
-            if (!filename) return;
+        const text = await response.text();
+        document.getElementById('deleteResult').innerText = text;
+      } catch (error) {
+        document.getElementById('deleteResult').innerText = 'Erreur : ' + error.message;
+      }
+    });
 
-            try {
-                // 1) Requête GET vers /download/<filename>
-                const response = await fetch(backendUrl + `api/download/${encodeURIComponent(filename)}`);
-                if (!response.ok) {
-                    throw new Error('Erreur lors du téléchargement : ' + response.status);
-                }
+    // Handler pour rafraîchir et afficher la liste des fichiers sous forme d'arborescence (file manager)
+    document.getElementById('refreshList').addEventListener('click', async function() {
+      try {
+        // Ajoutez ?tree=true pour forcer la réponse JSON
+        const response = await fetch(backendUrl + 'api/files?tree=true', { method: 'GET' });
+        const data = await response.json();
+        document.getElementById('listResult').innerHTML = renderTree(data);
+      } catch (error) {
+        document.getElementById('listResult').innerText = 'Erreur : ' + error.message;
+  }
+});
 
-                // 2) Récupérer la réponse sous forme de blob
-                const blob = await response.blob();
 
-                // 3) Créer un lien de téléchargement temporaire
-                const url = window.URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = filename; // Nom du fichier qui sera téléchargé
-                document.body.appendChild(link);
-                link.click();
+    // Fonction récursive pour afficher l'arborescence (max 10 niveaux)
+    function renderTree(nodes, depth = 0) {
+      if(depth >= 10) return '';
+      let html = '<ul class="file-tree">';
+      nodes.forEach(node => {
+        if(node.type === 'directory') {
+          html += `<li class="directory">${node.name}`;
+          if(node.children && node.children.length > 0) {
+            html += renderTree(node.children, depth + 1);
+          }
+          html += '</li>';
+        } else {
+          html += `<li>${node.name}</li>`;
+        }
+      });
+      html += '</ul>';
+      return html;
+    }
 
-                // 4) Nettoyer
-                document.body.removeChild(link);
-                window.URL.revokeObjectURL(url);
-            } catch (error) {
-                alert("Erreur : " + error.message);
-            }
-        });
-    </script>
+    // Handler pour télécharger un fichier
+    document.getElementById('downloadForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const filename = document.getElementById('downloadFilename').value.trim();
+      if (!filename) return;
+      try {
+        const response = await fetch(backendUrl + `api/download/${encodeURIComponent(filename)}`);
+        if (!response.ok) {
+          throw new Error('Erreur lors du téléchargement : ' + response.status);
+        }
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      } catch (error) {
+        alert("Erreur : " + error.message);
+      }
+    });
+    // Définir les routes valides pour votre application
+    const validPaths = ["/", "/form.html"];
+
+    // Vérifier si le chemin actuel est valide
+    if (!validPaths.includes(window.location.pathname)) {
+      // Remplacer le contenu du body par une page d'erreur 404
+      document.body.innerHTML = `
+        <div class="error404">
+          <h1>Erreur 404</h1>
+          <p>La page que vous recherchez n'existe pas.</p>
+        </div>
+      `;
+    }
+  </script>
 </body>
 
 </html>
