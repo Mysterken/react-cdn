@@ -1,39 +1,71 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
-  <meta charset="UTF-8">
-  <title>Gestion des fichiers</title>
-  <style>
-    /* Fond général avec dégradé */
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 1rem;
-      background: linear-gradient(135deg, #f0f9ff, #cbebff);
-      animation: fadeIn 1.5s ease-in-out;
-    }
+    <meta charset="UTF-8">
+    <title>Connexion</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+            flex-direction: column;
+        }
+        
+        .login-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        .input-field {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            color: white;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .login-btn {
+            background-color: #007bff;
+        }
+        
+        .login-btn:hover {
+            background-color: #0056b3;
+        }
+        
+        .error-message {
+            color: red;
+            display: none;
+            margin-top: 10px;
+        }
+    </style>
+    <script>
+        function login() {
+            let username = document.getElementById('login-username').value;
+            let password = document.getElementById('login-password').value;
+            let errorMessage = document.getElementById('login-error-message');
 
-    /* Animation de fade in */
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+            // Récupère la liste des utilisateurs depuis le localStorage
+            let users = JSON.parse(localStorage.getItem('users')) || [];
 
-    /* Style pour les sections */
-    section {
-      background: #ffffff;
-      border: 1px solid #ddd;
-      padding: 1rem;
-      margin-bottom: 2rem;
-      border-radius: 5px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    section:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    }
+            // Vérifie si l'utilisateur existe et si le mot de passe est correct
+            let user = users.find(u => u.username === username && u.password === password);
 
     /* Titres */
     h1, h2 {
@@ -109,8 +141,16 @@
     }
   </style>
 </head>
+
 <body>
-  <h1>Gestion des fichiers</h1>
+    <div class="login-container">
+        <h2>Connexion</h2>
+        <input type="text" id="login-username" class="input-field" placeholder="Nom d'utilisateur">
+        <input type="password" id="login-password" class="input-field" placeholder="Mot de passe">
+        <button class="btn login-btn" onclick="login()">Se connecter</button>
+        <p id="login-error-message" class="error-message"></p>
+        <p><a href="register.html">Créer un compte</a></p>
+    </div>
 
   <!-- Section Créer un fichier -->
   <section id="createSection">
@@ -348,4 +388,5 @@
     }
   </script>
 </body>
+
 </html>
